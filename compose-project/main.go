@@ -17,10 +17,10 @@ const (
 )
 
 type Pageview struct {
-	Id        int       `json:"id"`
-	User      int       `json:"userId"`
-	Url       string    `json:"url"`
-	Timestamp time.Time `json:"timestamp"`
+	Id        int       `db:"id"`
+	User      int       `db:"userId"`
+	Url       string    `db:"url"`
+	Timestamp time.Time `db:"timestamp"`
 }
 
 func main() {
