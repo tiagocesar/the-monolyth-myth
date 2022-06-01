@@ -18,7 +18,7 @@ const (
 
 type Pageview struct {
 	Id        int       `db:"id"`
-	User      int       `db:"userId"`
+	User      int       `db:"user_id"`
 	Url       string    `db:"url"`
 	Timestamp time.Time `db:"timestamp"`
 }
@@ -35,17 +35,10 @@ func main() {
 		_ = db.Close()
 	}(db)
 
-	// Total rows on the "Pageviews" table
-	var totalRows int
-	if err := db.QueryRow(`SELECT COUNT(id) AS total FROM "Pageviews"`).Scan(&totalRows); err != nil {
-		log.Fatal(err)
-	}
-	log.Printf("Total rows on the Pageviews table: %d\n", totalRows)
-
 	// Adding a new row for user '3'
 	var insertedId int
 	query := `
-		INSERT INTO "Pageviews" ("userId", url)
+		INSERT INTO pageviews (user_id, url)
 	    VALUES ($1, $2) RETURNING id`
 	if err := db.QueryRow(query, 3, "googl.com").Scan(&insertedId); err != nil {
 		log.Fatal(err)
@@ -54,15 +47,22 @@ func main() {
 
 	// Ooooops, the URL in the previous block was wrong, let's fix it
 	query = `
-		UPDATE "Pageviews"
+		UPDATE pageviews
 		   SET url = $1
 		 WHERE id = $2`
 	if _, err := db.Exec(query, "google.com", insertedId); err != nil {
 		log.Fatal(err)
 	}
 
+	// Total rows on the pageviews table
+	var totalRows int
+	if err := db.QueryRow(`SELECT COUNT(id) AS total FROM pageviews`).Scan(&totalRows); err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("Total rows on the Pageviews table: %d\n", totalRows)
+
 	// Now let's get all data for user 3
-	query = `SELECT id, "userId", url, timestamp FROM "Pageviews" WHERE "userId" = $1`
+	query = `SELECT id, user_id, url, timestamp FROM pageviews WHERE user_id = $1`
 	rows, err := db.Query(query, 3)
 	if err != nil {
 		log.Fatal(err)
