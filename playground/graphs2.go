@@ -11,6 +11,7 @@ type PersonInfo struct {
 	IsEngineer bool
 }
 
+// Breadth-first search over an indirected graph
 func main() {
 	graph := getPeopleGraph()
 	queue := lane.NewQueue()
