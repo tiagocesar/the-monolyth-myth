@@ -16,7 +16,11 @@ func main() {
 	queue := lane.NewQueue()
 	searched := make(map[string]struct{})
 
-	for _, person := range graph["Tiago"] {
+	// I don't want the search to go over me because I'm an engineer myself
+	searched["Me"] = struct{}{}
+
+	// Let's start from my immediate network
+	for _, person := range graph["Me"] {
 		queue.Enqueue(person)
 	}
 
@@ -41,10 +45,10 @@ func main() {
 func getPeopleGraph() map[string][]PersonInfo {
 	graph := make(map[string][]PersonInfo)
 
-	me := PersonInfo{Name: "Tiago", Level: 0, IsEngineer: true}
+	me := PersonInfo{Name: "Me", Level: 0, IsEngineer: true}
 	alice := PersonInfo{Name: "Alice", Level: 1}
 	bob := PersonInfo{Name: "Bob", Level: 1}
-	claire := PersonInfo{Name: "Claire", Level: 1, IsEngineer: true}
+	claire := PersonInfo{Name: "Claire", Level: 1, IsEngineer: false}
 	dean := PersonInfo{Name: "Dean", Level: 2, IsEngineer: true}
 	edward := PersonInfo{Name: "Edward", Level: 2}
 	frank := PersonInfo{Name: "Frank", Level: 3}
